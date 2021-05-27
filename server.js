@@ -46,3 +46,7 @@ app.get("/test", (req, res) => {
     console.log("test");
     res.send("<h1>Fuck you</h1>");
 });
+
+app.get("/all", (req, res) => {
+    res.sendFile(__dirname + "/public/html/all.html");
+});

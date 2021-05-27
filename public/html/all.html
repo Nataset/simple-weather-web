@@ -7,12 +7,40 @@
         <title>Document</title>
     </head>
     <body>
+        <h1>This is all.html page</h1>
         <script>
-            const getData = () => {
+            const getData = async () => {
                 const response = await fetch("/api");
-                const data = response.json();
-                console.log(data);
+                const data = await response.json();
+                for (const i in data) {
+                    const item = data[i];
+                    const latlong = document.createElement("div");
+                    const temp = document.createElement("div");
+                    const weather = document.createElement("div");
+                    const date = document.createElement("div");
+                    const space = document.createElement("br");
+
+                    const dateString = new Date(item.timestamp).toDateString();
+
+                    latlong.textContent = `latitude: ${item.lat} longitude: ${item.long}`;
+                    temp.textContent = `temperature: ${item.temp}`;
+                    weather.textContent = `Weather Descript: ${item.weatherDescript}`;
+                    date.textContent = `Time: ${dateString}`;
+                    document.body.append(latlong, temp, weather, date, space);
+                    console.log(
+                        "lat: " +
+                            item.lat +
+                            " long: " +
+                            item.long +
+                            "\ntemp: " +
+                            item.temp +
+                            "\nWeather Descript :" +
+                            item.weatherDescript
+                    );
+                }
             };
+
+            getData();
         </script>
     </body>
 </html>
