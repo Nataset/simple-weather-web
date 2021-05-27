@@ -3,7 +3,7 @@ const Datastore = require("nedb");
 const fetch = require("node-fetch");
 
 const app = express();
-const port = process.env.port;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log("start server at " + port);
 });
