@@ -1,0 +1,17 @@
+{
+  "name": "weather-web",
+  "version": "1.0.0",
+  "description": "simple weather app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TroNine",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nedb": "^1.8.0",
+    "node-fetch": "^2.6.1",
+    "nodemon": "^2.0.7"
+  }
+}
