@@ -18,8 +18,6 @@ const client = new MongoClient(uri, {
     useUnifiedTopology: true,
 });
 
-client.connect();
-
 // ### delete all data in locations collection
 // client
 //     .connect()
@@ -28,19 +26,21 @@ client.connect();
 //     .then((count) => console.log(count));
 
 const write = async (input) => {
-    // await client.connect();
+    await client.connect();
     const database = client.db("weather_app");
     const locations = database.collection("locations");
     const result = await locations.insertOne(input);
     return result ? "write data success" : "write data fall";
+    await client.close();
 };
 
 const read = async (callback) => {
-    // await client.connect();
+    await client.connect();
 
     const database = client.db("weather_app");
     const locations = database.collection("locations");
     callback(await locations.find({}).toArray());
+    await client.close();
     // await locations.find().forEach((location) => callback(location));
 
     // ### read function only use then
@@ -60,7 +60,7 @@ app.post("/api", (req, res) => {
     const data = req.body;
     const timestamp = Date.now();
     data.timestamp = timestamp;
-    write(data);
+    console.log(write(data));
     res.json(data);
 });
 
