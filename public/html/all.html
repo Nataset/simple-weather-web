@@ -12,6 +12,7 @@
             const getData = async () => {
                 const response = await fetch("/api");
                 const data = await response.json();
+                console.log(data);
                 for (const i in data) {
                     const item = data[i];
                     const latlong = document.createElement("div");

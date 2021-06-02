@@ -1,6 +1,7 @@
 const express = require("express");
-const Datastore = require("nedb");
 const fetch = require("node-fetch");
+const Datastore = require("nedb");
+const { MongoClient, Cursor } = require("mongodb");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -10,26 +11,60 @@ app.listen(port, () => {
 app.use(express.static("public"));
 app.use(express.json({ limit: "1mb" }));
 
-const database = new Datastore("database.db");
-database.loadDatabase();
+const uri =
+    "mongodb+srv://TroNine:0207185859@gettingstarted.9uzod.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
+
+// ### delete all data in locations collection
+// client
+//     .connect()
+//     .then((client) => client.db("weather_app").collection("locations").deleteMany())
+//     .then((result) => result.deletedCount)
+//     .then((count) => console.log(count));
+
+const write = async (input) => {
+    // await client.connect();
+    const database = client.db("weather_app");
+    const locations = database.collection("locations");
+    const result = await locations.insertOne(input);
+    return result ? "write data success" : "write data fall";
+};
+
+const read = async (callback) => {
+    // await client.connect();
+
+    const database = client.db("weather_app");
+    const locations = database.collection("locations");
+    callback(await locations.find({}).toArray());
+    // await locations.find().forEach((location) => callback(location));
+
+    // ### read function only use then
+    // client
+    //     .connect()
+    //     .then((res) => res.db("weather_app"))
+    //     .then((database) => database.collection("locations"))
+    //     .then((locations) => locations.find().forEach(callback))
+    //     .finally(client.close());
+};
+
+// const database = new Datastore("database.db");
+// database.loadDatabase();
 
 app.post("/api", (req, res) => {
     console.log("post request at /api");
     const data = req.body;
     const timestamp = Date.now();
     data.timestamp = timestamp;
-    database.insert(data);
+    write(data);
     res.json(data);
 });
 
 app.get("/api", (request, response) => {
-    database.find({}, (err, data) => {
-        if (err) {
-            response.end();
-            return;
-        }
-        response.json(data);
-    });
+    console.log("get request at /api");
+    read((data) => response.json(data));
 });
 
 app.get("/weather/:lat/:long", async (req, res) => {
