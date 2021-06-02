@@ -18,6 +18,8 @@ const client = new MongoClient(uri, {
     useUnifiedTopology: true,
 });
 
+client.connect();
+
 // ### delete all data in locations collection
 // client
 //     .connect()
