@@ -30,8 +30,8 @@ const write = async (input) => {
     const database = client.db("weather_app");
     const locations = database.collection("locations");
     const result = await locations.insertOne(input);
-    return result ? "write data success" : "write data fall";
     await client.close();
+    return result ? "write data success" : "write data fall";
 };
 
 const read = async (callback) => {
@@ -60,7 +60,7 @@ app.post("/api", (req, res) => {
     const data = req.body;
     const timestamp = Date.now();
     data.timestamp = timestamp;
-    console.log(write(data));
+    write(data).then(console.log);
     res.json(data);
 });
 
